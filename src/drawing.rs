@@ -1,5 +1,7 @@
 pub fn clear_screen() {
-    println!("{}", termion::clear::All)
+    let mut stdout = stdout().into_raw_mode().unwrap();
+    write!(stdout, "{}{} test", termion::clear::All, termion::cursor::Goto(1, 1));
+    stdout.flush().unwrap();
 }
 
 pub fn draw_block_at(x: usize, y: usize, color: String) {

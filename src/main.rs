@@ -13,7 +13,6 @@ fn main() {
     clear_screen();
 
     loop {
-        field.move_stone();
-        thread::sleep(Duration::new(0, 100000000));
+
     }
 }
