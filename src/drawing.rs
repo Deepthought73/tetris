@@ -3,7 +3,7 @@ pub fn clear_screen() {
 }
 
 pub fn draw_block_at(x: usize, y: usize, color: String) {
-    println!("{}", termion::cursor::Goto(x as u16, y as u16))
+    // println!("{}", termion::cursor::Goto(x as u16, y as u16))
 }
 
 pub fn clear_block_at(x: usize, y: usize) {

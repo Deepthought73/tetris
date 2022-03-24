@@ -1,5 +1,6 @@
 use termion::color;
 
+#[derive(Clone)]
 pub struct Stone {
     pub x: usize,
     pub y: usize,
@@ -8,7 +9,7 @@ pub struct Stone {
 }
 
 impl Stone {
-    fn i(x: usize, y: usize, color: String) -> Stone {
+    pub fn i(x: usize, y: usize, color: String) -> Stone {
         Stone {
             x, y,
             block_mask: [

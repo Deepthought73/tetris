@@ -1,3 +1,5 @@
+use std::thread;
+use std::time::Duration;
 use crate::drawing::clear_screen;
 use crate::tetris_field::TetrisField;
 
@@ -6,11 +8,12 @@ pub mod stone;
 pub mod drawing;
 
 fn main() {
-    let field = TetrisField::new(10, 30);
+    let mut field = TetrisField::new(10, 30);
 
     clear_screen();
 
     loop {
-        field.move_stone()
+        field.move_stone();
+        thread::sleep(Duration::new(0, 100000000));
     }
 }

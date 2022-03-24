@@ -1,10 +1,11 @@
 use std::borrow::BorrowMut;
+use std::cell::RefCell;
 use crate::drawing::{clear_block_at, draw_block_at};
 use crate::stone::Stone;
 
 pub struct TetrisField {
     field: Vec<Vec<bool>>,
-    flying_stone: Option<Box<Stone>>,
+    flying_stone: Stone,
 }
 
 impl TetrisField {
@@ -19,48 +20,43 @@ impl TetrisField {
         }
         TetrisField {
             field,
-            flying_stone: None,
+            flying_stone: Stone::i(0, 0, "".to_string()),
         }
     }
 
     fn render_stone(&self) {
-        if let Some(flying_stone) = &self.flying_stone {
-            for row in 0..4 {
-                for column in 0..4 {
-                    if flying_stone.block_mask[row][column] {
-                        draw_block_at(column, row, flying_stone.color.clone())
-                    }
+        for row in 0..4 {
+            for column in 0..4 {
+                if self.flying_stone.block_mask[row][column] {
+                    draw_block_at(column, row, self.flying_stone.color.clone())
                 }
             }
         }
     }
 
     fn remove_stone(&self) {
-        if let Some(flying_stone) = &self.flying_stone {
-            for row in 0..4 {
-                for column in 0..4 {
-                    if flying_stone.block_mask[row][column] {
-                        clear_block_at(column, row)
-                    }
+        for row in 0..4 {
+            for column in 0..4 {
+                if self.flying_stone.block_mask[row][column] {
+                    clear_block_at(column, row)
                 }
             }
         }
     }
 
     pub fn move_stone(&mut self) {
-        if let Some(flying_stone) = &self.flying_stone {
-            if !self.is_on_ground() {
-                self.remove_stone();
+        if !self.is_on_ground() {
+            self.remove_stone();
 
-                let fs = &mut self.flying_stone;
-                fs.unwrap();
-                self.render_stone()
-            } else {
-                for row in 0..4 {
-                    for column in 0..4 {
-                        if flying_stone.block_mask[row][column] {
-                            self.field[flying_stone.y + row][flying_stone.x + column] = true
-                        }
+            self.flying_stone.y += 1;
+            println!("{}", self.flying_stone.y);
+
+            self.render_stone()
+        } else {
+            for row in 0..4 {
+                for column in 0..4 {
+                    if self.flying_stone.block_mask[row][column] {
+                        self.field[self.flying_stone.y + row][self.flying_stone.x + column] = true
                     }
                 }
             }
@@ -68,13 +64,11 @@ impl TetrisField {
     }
 
     fn is_on_ground(&self) -> bool {
-        if let Some(flying_stone) = &self.flying_stone {
-            for row in 0..4 {
-                for column in 0..4 {
-                    if flying_stone.block_mask[row][column] {
-                        if self.field[flying_stone.y + row + 1][flying_stone.x + column] {
-                            return true;
-                        }
+        for row in 0..4 {
+            for column in 0..4 {
+                if self.flying_stone.block_mask[row][column] {
+                    if self.flying_stone.y + row + 2 >= self.field.len() || self.field[self.flying_stone.y + row + 1][self.flying_stone.x + column] {
+                        return true;
                     }
                 }
             }
