@@ -38,8 +38,11 @@ fn main() {
         }
     });
 
+    let mut i = 0;
     while *is_running_outer.lock().unwrap() {
-        field.move_stone(&mut out);
+        draw_block_at(&mut out, i, i, "X".to_string());
+        i += 1;
+        // field.move_stone(&mut out);
         thread::sleep(TICK_DURATION);
     }
 }
