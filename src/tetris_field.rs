@@ -22,7 +22,7 @@ impl TetrisField {
         }
         TetrisField {
             field,
-            flying_stone: Stone::i(0, 0, "".to_string()),
+            flying_stone: Stone::t(0, 0, "".to_string()),
         }
     }
 
@@ -30,7 +30,7 @@ impl TetrisField {
         for row in 0..4 {
             for column in 0..4 {
                 if self.flying_stone.block_mask[row][column] {
-                    draw_block_at(stdout,column, row, self.flying_stone.color.clone())
+                    draw_block_at(stdout,self.flying_stone.x+column, self.flying_stone.y+row, self.flying_stone.color.clone())
                 }
             }
         }
