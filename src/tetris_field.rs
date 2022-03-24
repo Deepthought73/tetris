@@ -1,5 +1,7 @@
 use std::borrow::BorrowMut;
 use std::cell::RefCell;
+use std::io::Stdout;
+use termion::raw::RawTerminal;
 use crate::drawing::{clear_block_at, draw_block_at};
 use crate::stone::Stone;
 
@@ -24,11 +26,11 @@ impl TetrisField {
         }
     }
 
-    fn render_stone(&self) {
+    fn render_stone(&self, stdout: &mut RawTerminal<Stdout>) {
         for row in 0..4 {
             for column in 0..4 {
                 if self.flying_stone.block_mask[row][column] {
-                    draw_block_at(column, row, self.flying_stone.color.clone())
+                    draw_block_at(stdout,column, row, self.flying_stone.color.clone())
                 }
             }
         }

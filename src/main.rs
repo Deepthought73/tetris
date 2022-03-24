@@ -12,7 +12,7 @@ pub mod tetris_field;
 pub mod stone;
 pub mod drawing;
 
-const TICK: Duration = Duration::new(0, 3_0_000_000);
+const TICK_DURATION: Duration = Duration::new(0, 200_000_000);
 
 fn main() {
     let mut field = TetrisField::new(10, 30);
@@ -38,8 +38,8 @@ fn main() {
         }
     });
 
-
     while *is_running_outer.lock().unwrap() {
-
+        field.move_stone(&mut out);
+        thread::sleep(TICK_DURATION);
     }
 }
