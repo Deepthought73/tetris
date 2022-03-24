@@ -1,5 +1,8 @@
-pub fn clear_screen() {
-    let mut stdout = stdout().into_raw_mode().unwrap();
+use std::io::{stdout, Stdout, Write};
+use termion::raw::{IntoRawMode, RawTerminal};
+use termion::screen::AlternateScreen;
+
+pub fn clear_screen(stdout: &mut RawTerminal<Stdout>) {
     write!(stdout, "{}{} test", termion::clear::All, termion::cursor::Goto(1, 1));
     stdout.flush().unwrap();
 }

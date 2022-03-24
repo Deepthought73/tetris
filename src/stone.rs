@@ -26,36 +26,36 @@ impl Stone {
         Stone {
             x, y,
             block_mask: [
+                [true, false, false, false],
+                [true, false, false, false],
+                [true, true, false, false],
                 [false, false, false, false],
-                [false, true, false, false],
-                [false, true, false, false],
-                [false, true, true, false],
             ],
             color
         }
     }
 
-    pub fn square(x: usize, y: usize, color: String) -> Stone {
+    pub fn o(x: usize, y: usize, color: String) -> Stone {
         Stone {
             x, y,
             block_mask: [
+                [true, true, false, false],
+                [true, true, false, false],
                 [false, false, false, false],
                 [false, false, false, false],
-                [false, true, true, false],
-                [false, true, true, false],
             ],
             color
         }
     }
 
-    pub fn rev_l(x: usize, y: usize, color: String) -> Stone {
+    pub fn j(x: usize, y: usize, color: String) -> Stone {
         Stone {
             x, y,
             block_mask: [
+                [false, true, false, false],
+                [false, true, false, false],
+                [true, true, false, false],
                 [false, false, false, false],
-                [false, false, true, false],
-                [false, false, true, false],
-                [false, true, true, false],
             ],
             color
         }
@@ -65,10 +65,10 @@ impl Stone {
         Stone {
             x, y,
             block_mask: [
-                [false, false, false, false],
-                [false, false, false, false],
                 [false, true, false, false],
                 [true, true, true, false],
+                [false, false, false, false],
+                [false, false, false, false],
             ],
             color
         }
