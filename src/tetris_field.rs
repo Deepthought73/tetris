@@ -1,3 +1,4 @@
+use termion::color;
 use crate::Drawing;
 use crate::stone::Stone;
 
@@ -18,7 +19,7 @@ impl TetrisField {
         }
         TetrisField {
             field,
-            flying_stone: Stone::t(0, 0, "".to_string()),
+            flying_stone: Stone::t(0, 0, color::Rgb(100, 100, 0)),
         }
     }
 
@@ -29,7 +30,7 @@ impl TetrisField {
                     drawing.draw_block_at(
                         self.flying_stone.x + column,
                         self.flying_stone.y + row,
-                        self.flying_stone.color.clone(),
+                        *Box::from(self.flying_stone.color.clone()),
                     )
                 }
             }

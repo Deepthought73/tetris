@@ -1,13 +1,15 @@
+use termion::color;
+
 #[derive(Clone)]
 pub struct Stone {
     pub x: usize,
     pub y: usize,
     pub block_mask: [[bool; 4]; 4],
-    pub color: String
+    pub color: color::Rgb
 }
 
 impl Stone {
-    pub fn i(x: usize, y: usize, color: String) -> Stone {
+    pub fn i(x: usize, y: usize, color: color::Rgb) -> Stone {
         Stone {
             x, y,
             block_mask: [
@@ -20,7 +22,7 @@ impl Stone {
         }
     }
 
-    pub fn l(x: usize, y: usize, color: String) -> Stone {
+    pub fn l(x: usize, y: usize, color: color::Rgb) -> Stone {
         Stone {
             x, y,
             block_mask: [
@@ -33,7 +35,7 @@ impl Stone {
         }
     }
 
-    pub fn o(x: usize, y: usize, color: String) -> Stone {
+    pub fn o(x: usize, y: usize, color: color::Rgb) -> Stone {
         Stone {
             x, y,
             block_mask: [
@@ -46,7 +48,7 @@ impl Stone {
         }
     }
 
-    pub fn j(x: usize, y: usize, color: String) -> Stone {
+    pub fn j(x: usize, y: usize, color: color::Rgb) -> Stone {
         Stone {
             x, y,
             block_mask: [
@@ -59,7 +61,7 @@ impl Stone {
         }
     }
 
-    pub fn t(x: usize, y: usize, color: String) -> Stone {
+    pub fn t(x: usize, y: usize, color: color::Rgb) -> Stone {
         Stone {
             x, y,
             block_mask: [

@@ -43,7 +43,7 @@ fn main() {
     });
 
     while *is_running_main.lock().unwrap() {
-        // field.move_stone(&mut out);
+        field.move_stone(&mut drawing);
         thread::sleep(TICK_DURATION);
     }
 
