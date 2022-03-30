@@ -36,24 +36,24 @@ impl TetrisField {
         }
     }
 
-    fn remove_stone(&self) {
+    fn remove_stone(&self, drawing: &mut Drawing) {
         for row in 0..4 {
             for column in 0..4 {
                 if self.flying_stone.block_mask[row][column] {
-                    clear_block_at(column, row)
+                    drawing.clear_block_at(
+                        self.flying_stone.x + column,
+                        self.flying_stone.y + row,
+                    )
                 }
             }
         }
     }
 
-    pub fn move_stone(&mut self) {
+    pub fn move_stone(&mut self, drawing: &mut Drawing) {
         if !self.is_on_ground() {
-            self.remove_stone();
-
+            self.remove_stone(drawing);
             self.flying_stone.y += 1;
-            println!("{}", self.flying_stone.y);
-
-            self.render_stone()
+            self.render_stone(drawing)
         } else {
             for row in 0..4 {
                 for column in 0..4 {

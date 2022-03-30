@@ -59,7 +59,7 @@ impl Stone {
         }
     }
 
-    pub fn triangle(x: usize, y: usize, color: String) -> Stone {
+    pub fn t(x: usize, y: usize, color: String) -> Stone {
         Stone {
             x, y,
             block_mask: [
