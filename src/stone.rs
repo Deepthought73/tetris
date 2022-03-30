@@ -1,5 +1,3 @@
-use termion::color;
-
 #[derive(Clone)]
 pub struct Stone {
     pub x: usize,

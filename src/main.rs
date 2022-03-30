@@ -1,11 +1,7 @@
-use std::io::{stdin, stdout, Write};
-use std::ops::Deref;
-use std::process::exit;
+use std::io::stdin;
 use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
-use termion::raw::IntoRawMode;
-use crate::drawing::{clear_screen, draw_block_at};
 use crate::tetris_field::TetrisField;
 
 pub mod tetris_field;
@@ -15,17 +11,22 @@ pub mod drawing;
 const TICK_DURATION: Duration = Duration::new(0, 200_000_000);
 
 fn main() {
-    let mut field = TetrisField::new(10, 30);
+    let width = 10;
+    let height = 20;
 
-    let stdin = stdin();
-    let mut out = stdout().into_raw_mode().unwrap();
+    let mut field = TetrisField::new(width, height);
 
-    clear_screen(&mut out);
+    let mut drawing = Drawing::new(width, height);
 
-    let mut is_running = Arc::new(Mutex::new(true));
-    let mut is_running_outer = Arc::clone(&is_running);
+    drawing.hide_cursor();
+    drawing.clear_screen();
+    drawing.draw_border();
+
+    let is_running = Arc::new(Mutex::new(true));
+    let is_running_main = Arc::clone(&is_running);
 
     thread::spawn(move || {
+        let stdin = stdin();
         for c in stdin.events() {
             let evt = c.unwrap();
             match evt {
@@ -38,8 +39,11 @@ fn main() {
         }
     });
 
-    while *is_running_outer.lock().unwrap() {
-        field.move_stone(&mut out);
+    while *is_running_main.lock().unwrap() {
+        // field.move_stone(&mut out);
         thread::sleep(TICK_DURATION);
     }
+
+    drawing.clear_screen();
+    drawing.show_cursor();
 }

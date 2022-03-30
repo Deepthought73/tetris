@@ -1,8 +1,4 @@
-use std::borrow::BorrowMut;
-use std::cell::RefCell;
-use std::io::Stdout;
-use termion::raw::RawTerminal;
-use crate::drawing::{clear_block_at, draw_block_at};
+use crate::Drawing;
 use crate::stone::Stone;
 
 pub struct TetrisField {
@@ -26,11 +22,15 @@ impl TetrisField {
         }
     }
 
-    fn render_stone(&self, stdout: &mut RawTerminal<Stdout>) {
+    fn render_stone(&self, drawing: &mut Drawing) {
         for row in 0..4 {
             for column in 0..4 {
                 if self.flying_stone.block_mask[row][column] {
-                    draw_block_at(stdout,self.flying_stone.x+column, self.flying_stone.y+row, self.flying_stone.color.clone())
+                    drawing.draw_block_at(
+                        self.flying_stone.x + column,
+                        self.flying_stone.y + row,
+                        self.flying_stone.color.clone(),
+                    )
                 }
             }
         }
@@ -69,7 +69,8 @@ impl TetrisField {
         for row in 0..4 {
             for column in 0..4 {
                 if self.flying_stone.block_mask[row][column] {
-                    if self.flying_stone.y + row + 2 >= self.field.len() || self.field[self.flying_stone.y + row + 1][self.flying_stone.x + column] {
+                    if self.flying_stone.y + row + 2 >= self.field.len() ||
+                        self.field[self.flying_stone.y + row + 1][self.flying_stone.x + column] {
                         return true;
                     }
                 }
