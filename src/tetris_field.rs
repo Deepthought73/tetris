@@ -124,6 +124,9 @@ impl TetrisField {
                     if self.flying_stone.x + column > self.field.first().unwrap().len() - 1 {
                         return true
                     }
+                    if self.flying_stone.y + row > self.field.len() - 1 {
+                        return true
+                    }
                     if self.field[self.flying_stone.y + row][self.flying_stone.x + column] {
                         return true;
                     }
