@@ -23,7 +23,7 @@ impl TetrisField {
         }
     }
 
-    pub(crate) fn render_stone(&self, drawing: &mut Drawing) {
+    pub fn render_stone(&self, drawing: &mut Drawing) {
         for row in 0..4 {
             for column in 0..4 {
                 if self.flying_stone.block_mask[row][column] {
@@ -69,7 +69,7 @@ impl TetrisField {
 
     pub fn move_stone_right(&mut self, drawing: &mut Drawing) {
         self.remove_stone(drawing);
-        if self.flying_stone.x == self.field.first().len() - 1 {
+        if self.flying_stone.x == self.field.first().unwrap().len() - 1 {
             self.flying_stone.x += 1;
         }
         self.render_stone(drawing)

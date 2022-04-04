@@ -1,3 +1,4 @@
+use std::borrow::BorrowMut;
 use std::io::stdin;
 use std::sync::{Arc, Mutex};
 use std::thread;
@@ -18,16 +19,21 @@ fn main() {
     let width = 10;
     let height = 20;
 
-    let mut field = TetrisField::new(width, height);
+    let field = TetrisField::new(width, height);
+    let field = Arc::new(Mutex::from(field));
 
-    let mut drawing = Drawing::new(width, height);
+    let drawing = Drawing::new(width, height);
+    let drawing = Arc::new(Mutex::from(drawing));
 
-    drawing.hide_cursor();
-    drawing.clear_screen();
-    drawing.draw_border();
+    drawing.lock().unwrap().hide_cursor();
+    drawing.lock().unwrap().clear_screen();
+    drawing.lock().unwrap().draw_border();
 
     let is_running = Arc::new(Mutex::new(true));
     let is_running_main = Arc::clone(&is_running);
+
+    let field_copy = Arc::clone(&field);
+    let drawing_copy = Arc::clone(&drawing);
 
     thread::spawn(move || {
         let stdin = stdin();
@@ -38,22 +44,28 @@ fn main() {
                     *is_running.lock().unwrap() = false;
                     break;
                 }
-                Event::Key(Char('a')) | Event::Key(Char('A')) | Event::Key(Key::Left) => {}
-                Event::Key(Char('d')) | Event::Key(Char('D')) | Event::Key(Key::Right) => {}
-                Event::Key(Char('w')) | Event::Key(Char('W')) | Event::Key(Key::Up) => {}
-                Event::Key(Char('s')) | Event::Key(Char('S')) | Event::Key(Key::Down) => {}
+                Event::Key(Char('a')) | Event::Key(Char('A')) | Event::Key(Key::Left) => {
+                    field.lock().unwrap().move_stone_left(
+                        drawing.lock().unwrap().borrow_mut()
+                    );
+                }
+                Event::Key(Char('d')) | Event::Key(Char('D')) | Event::Key(Key::Right) => {
+                    field.lock().unwrap().move_stone_right(
+                        drawing.lock().unwrap().borrow_mut()
+                    );
+                }
                 _ => {}
             }
         }
     });
 
-    field.render_stone(&mut drawing);
+    field_copy.lock().unwrap().render_stone(drawing_copy.lock().unwrap().borrow_mut());
     thread::sleep(TICK_DURATION);
     while *is_running_main.lock().unwrap() {
-        field.move_stone(&mut drawing);
+        field_copy.lock().unwrap().move_stone(drawing_copy.lock().unwrap().borrow_mut());
         thread::sleep(TICK_DURATION);
     }
 
-    drawing.clear_screen();
-    drawing.show_cursor();
+    drawing_copy.lock().unwrap().clear_screen();
+    drawing_copy.lock().unwrap().show_cursor();
 }
