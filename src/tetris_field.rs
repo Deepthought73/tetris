@@ -1,6 +1,7 @@
 use rand::Rng;
 use termion::color;
 use termion::color::Rgb;
+use termion::event::Key::Null;
 use crate::Drawing;
 use crate::stone::Stone;
 
@@ -31,25 +32,44 @@ impl TetrisField {
         }
     }
 
-    pub fn render_stone(&self, drawing: &mut Drawing) {
+    pub fn draw_block_at(&mut self, drawing: &mut Drawing, x:usize, y:usize, color: Rgb) {
+        drawing.draw_block_at(
+            x,
+            y,
+            *Box::from(color)
+        );
+        self.color_matrix[y][x] = Some(color);
+    }
+
+    pub fn clear_block_at(&mut self, drawing: &mut Drawing, x:usize, y:usize) {
+        drawing.clear_block_at(
+            x,
+            y,
+        );
+        self.color_matrix[y][x] = None;
+    }
+
+    pub fn render_stone(&mut self, drawing: &mut Drawing) {
         for row in 0..4 {
             for column in 0..4 {
                 if self.flying_stone.block_mask()[row][column] {
-                    drawing.draw_block_at(
+                    self.draw_block_at(
+                        drawing,
                         self.flying_stone.x + column,
                         self.flying_stone.y + row,
-                        *Box::from(self.flying_stone.color.clone()),
-                    )
+                        *Box::from(self.flying_stone.color.clone())
+                    );
                 }
             }
         }
     }
 
-    fn remove_stone(&self, drawing: &mut Drawing) {
+    fn remove_stone(&mut self, drawing: &mut Drawing) {
         for row in 0..4 {
             for column in 0..4 {
                 if self.flying_stone.block_mask()[row][column] {
-                    drawing.clear_block_at(
+                    self.clear_block_at(
+                        drawing,
                         self.flying_stone.x + column,
                         self.flying_stone.y + row,
                     )
@@ -115,14 +135,21 @@ impl TetrisField {
 
     fn clear_row(&mut self, row: usize, drawing: &mut Drawing) {
         for column in 0..self.field[0].len() {
-            drawing.clear_block_at(
+            self.clear_block_at(
+                drawing,
                 column,
                 row,
             );
-            self.field[row][column] = false
         }
-        for index in (1..row).rev() {
-            for column in 0..self.field[index].len() {
+        for index in (1..row+1).rev() {
+            for column in 0..self.field[0].len() {
+                if self.field[index - 1][column] {
+                    if let Some(color) = self.color_matrix[index - 1][column] {
+                        self.draw_block_at(drawing, column, index, color)
+                    }
+                } else {
+                    self.clear_block_at(drawing, column, index)
+                }
                 self.field[index][column] = self.field[index - 1][column]
             }
         }
