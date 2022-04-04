@@ -45,6 +45,41 @@ impl Stone {
         }
     }
 
+    pub fn j(x: usize, y: usize, color: color::Rgb) -> Stone {
+        Stone {
+            x,
+            y,
+            block_mask: [
+                [
+                    [false, true, false, false],
+                    [false, true, false, false],
+                    [true, true, false, false],
+                    [false, false, false, false],
+                ],
+                [
+                    [true, true, true, false],
+                    [false, false, true, false],
+                    [false, false, false, false],
+                    [false, false, false, false],
+                ],
+                [
+                    [true, true, false, false],
+                    [true, false, false, false],
+                    [true, false, false, false],
+                    [false, false, false, false],
+                ],
+                [
+                    [true, false, false, false],
+                    [true, true, true, false],
+                    [false, false, false, false],
+                    [false, false, false, false],
+                ]
+            ],
+            rotation: 0,
+            color,
+        }
+    }
+
     pub fn l(x: usize, y: usize, color: color::Rgb) -> Stone {
         Stone {
             x,
@@ -115,38 +150,38 @@ impl Stone {
         }
     }
 
-    pub fn j(x: usize, y: usize, color: color::Rgb) -> Stone {
+    pub fn s(x: usize, y: usize, color: color::Rgb) -> Stone {
         Stone {
             x,
             y,
             block_mask: [
                 [
-                    [false, true, false, false],
-                    [false, true, false, false],
+                    [false, true, true, false],
                     [true, true, false, false],
                     [false, false, false, false],
-                ],
-                [
-                    [true, true, true, false],
-                    [false, false, true, false],
-                    [false, false, false, false],
                     [false, false, false, false],
                 ],
                 [
+                    [true, false, false, false],
                     [true, true, false, false],
-                    [true, false, false, false],
-                    [true, false, false, false],
+                    [false, true, false, false],
+                    [false, false, false, false],
+                ],
+                [
+                    [false, true, true, false],
+                    [true, true, false, false],
+                    [false, false, false, false],
                     [false, false, false, false],
                 ],
                 [
                     [true, false, false, false],
-                    [true, true, true, false],
-                    [false, false, false, false],
+                    [true, true, false, false],
+                    [false, true, false, false],
                     [false, false, false, false],
                 ]
             ],
             rotation: 0,
-            color,
+            color
         }
     }
 
@@ -182,6 +217,41 @@ impl Stone {
             ],
             rotation: 0,
             color,
+        }
+    }
+
+    pub fn z(x: usize, y: usize, color: color::Rgb) -> Stone {
+        Stone {
+            x,
+            y,
+            block_mask: [
+                [
+                    [true, true, false, false],
+                    [false, true, true, false],
+                    [false, false, false, false],
+                    [false, false, false, false],
+                ],
+                [
+                    [false, true, false, false],
+                    [true, true, false, false],
+                    [true, false, false, false],
+                    [false, false, false, false],
+                ],
+                [
+                    [true, true, false, false],
+                    [false, true, true, false],
+                    [false, false, false, false],
+                    [false, false, false, false],
+                ],
+                [
+                    [false, true, false, false],
+                    [true, true, false, false],
+                    [true, false, false, false],
+                    [false, false, false, false],
+                ]
+            ],
+            rotation: 0,
+            color
         }
     }
 
