@@ -69,13 +69,17 @@ impl TetrisField {
 
     pub fn move_stone_right(&mut self, drawing: &mut Drawing) {
         self.remove_stone(drawing);
-        self.flying_stone.x += 1;
+        if self.flying_stone.x == self.field.first().len() - 1 {
+            self.flying_stone.x += 1;
+        }
         self.render_stone(drawing)
     }
 
     pub fn move_stone_left(&mut self, drawing: &mut Drawing) {
         self.remove_stone(drawing);
-        self.flying_stone.x -= 1;
+        if self.flying_stone.x == 0 {
+            self.flying_stone.x -= 1;
+        }
         self.render_stone(drawing)
     }
 
