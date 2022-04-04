@@ -42,6 +42,8 @@ fn main() {
         }
     });
 
+    field.render_stone(&mut drawing);
+    thread::sleep(TICK_DURATION);
     while *is_running_main.lock().unwrap() {
         field.move_stone(&mut drawing);
         thread::sleep(TICK_DURATION);

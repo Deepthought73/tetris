@@ -23,7 +23,7 @@ impl TetrisField {
         }
     }
 
-    fn render_stone(&self, drawing: &mut Drawing) {
+    pub(crate) fn render_stone(&self, drawing: &mut Drawing) {
         for row in 0..4 {
             for column in 0..4 {
                 if self.flying_stone.block_mask[row][column] {
@@ -51,6 +51,7 @@ impl TetrisField {
     }
 
     pub fn move_stone(&mut self, drawing: &mut Drawing) {
+        return
         if !self.is_on_ground() {
             self.remove_stone(drawing);
             self.flying_stone.y += 1;
