@@ -64,6 +64,7 @@ impl TetrisField {
                     }
                 }
             }
+            self.flying_stone = Stone::t(0, 0, color::Rgb(100, 100, 0));
         }
     }
 
