@@ -70,7 +70,7 @@ impl TetrisField {
 
     pub fn move_stone_right(&mut self, drawing: &mut Drawing) {
         self.remove_stone(drawing);
-        if self.flying_stone.x + 2 < self.field.first().unwrap().len() - 1 {
+        if !self.collision_right() {
             self.flying_stone.x += 1;
         }
         self.render_stone(drawing)
@@ -78,10 +78,42 @@ impl TetrisField {
 
     pub fn move_stone_left(&mut self, drawing: &mut Drawing) {
         self.remove_stone(drawing);
-        if self.flying_stone.x > 0 {
+        if !self.collision_left() {
             self.flying_stone.x -= 1;
         }
         self.render_stone(drawing)
+    }
+
+    fn collision_right(&self) -> bool {
+        for row in 0..4 {
+            for column in 0..4 {
+                if self.flying_stone.block_mask[row][column] {
+                    if self.flying_stone.x + 2 >= self.field.first().unwrap().len() - 1 {
+                        return true
+                    }
+                    if self.field[self.flying_stone.y + row][self.flying_stone.x + column +1] {
+                        return true;
+                    }
+                }
+            }
+        }
+        false
+    }
+
+    fn collision_left(&self) -> bool {
+        for row in 0..4 {
+            for column in 0..4 {
+                if self.flying_stone.block_mask[row][column] {
+                    if self.flying_stone.x <= 0 {
+                        return true
+                    }
+                    if self.field[self.flying_stone.y + row][self.flying_stone.x + column - 1] {
+                        return true;
+                    }
+                }
+            }
+        }
+        false
     }
 
     fn is_on_ground(&self) -> bool {
