@@ -19,7 +19,7 @@ impl TetrisField {
         }
         TetrisField {
             field,
-            flying_stone: Stone::t(0, 0, color::Rgb(100, 100, 0)),
+            flying_stone: Stone::t(0, 0, color::Rgb(200, 100, 0)),
         }
     }
 
@@ -51,7 +51,6 @@ impl TetrisField {
     }
 
     pub fn move_stone(&mut self, drawing: &mut Drawing) {
-        return
         if !self.is_on_ground() {
             self.remove_stone(drawing);
             self.flying_stone.y += 1;
@@ -116,11 +115,16 @@ impl TetrisField {
         false
     }
 
+    pub fn rotate(&mut self) {
+        self.flying_stone.rotation += 1;
+        self.flying_stone.rotation %= 3;
+    }
+
     fn is_on_ground(&self) -> bool {
         for row in 0..4 {
             for column in 0..4 {
                 if self.flying_stone.block_mask[row][column] {
-                    if self.flying_stone.x+column < self.field.first().unwrap().len() - 1 {
+                    if self.flying_stone.x + column < self.field.first().unwrap().len() - 1 {
                         if self.flying_stone.y + row + 1 >= self.field.len() ||
                             self.field[self.flying_stone.y + row + 1][self.flying_stone.x + column] {
                             return true;
