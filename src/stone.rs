@@ -4,8 +4,8 @@ use termion::color;
 pub struct Stone {
     pub x: usize,
     pub y: usize,
-    pub block_mask: [[[bool; 4]; 4]; 4],
-    pub rotation: usize,
+    block_mask: [[[bool; 4]; 4]; 4],
+    rotation: usize,
     pub color: color::Rgb,
 }
 
@@ -183,5 +183,13 @@ impl Stone {
             rotation: 0,
             color,
         }
+    }
+
+    pub fn rotate(&mut self) {
+        self.rotation = (self.rotation + 1) % 4;
+    }
+
+    pub fn block_mask(&self) -> &[[bool; 4]; 4] {
+        &self.block_mask[self.rotation]
     }
 }

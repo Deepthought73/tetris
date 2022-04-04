@@ -26,7 +26,7 @@ impl TetrisField {
     pub fn render_stone(&self, drawing: &mut Drawing) {
         for row in 0..4 {
             for column in 0..4 {
-                if self.flying_stone.block_mask[row][column] {
+                if self.flying_stone.block_mask()[row][column] {
                     drawing.draw_block_at(
                         self.flying_stone.x + column,
                         self.flying_stone.y + row,
@@ -40,7 +40,7 @@ impl TetrisField {
     fn remove_stone(&self, drawing: &mut Drawing) {
         for row in 0..4 {
             for column in 0..4 {
-                if self.flying_stone.block_mask[row][column] {
+                if self.flying_stone.block_mask()[row][column] {
                     drawing.clear_block_at(
                         self.flying_stone.x + column,
                         self.flying_stone.y + row,
@@ -58,7 +58,7 @@ impl TetrisField {
         } else {
             for row in 0..4 {
                 for column in 0..4 {
-                    if self.flying_stone.block_mask[row][column] {
+                    if self.flying_stone.block_mask()[row][column] {
                         self.field[self.flying_stone.y + row][self.flying_stone.x + column] = true
                     }
                 }
@@ -86,7 +86,7 @@ impl TetrisField {
     fn collision_right(&self) -> bool {
         for row in 0..4 {
             for column in 0..4 {
-                if self.flying_stone.block_mask[row][column] {
+                if self.flying_stone.block_mask()[row][column] {
                     if self.flying_stone.x + 2 >= self.field.first().unwrap().len() - 1 {
                         return true
                     }
@@ -102,7 +102,7 @@ impl TetrisField {
     fn collision_left(&self) -> bool {
         for row in 0..4 {
             for column in 0..4 {
-                if self.flying_stone.block_mask[row][column] {
+                if self.flying_stone.block_mask()[row][column] {
                     if self.flying_stone.x <= 0 {
                         return true
                     }
@@ -116,14 +116,13 @@ impl TetrisField {
     }
 
     pub fn rotate(&mut self) {
-        self.flying_stone.rotation += 1;
-        self.flying_stone.rotation %= 3;
+        self.flying_stone.rotate()
     }
 
     fn is_on_ground(&self) -> bool {
         for row in 0..4 {
             for column in 0..4 {
-                if self.flying_stone.block_mask[row][column] {
+                if self.flying_stone.block_mask()[row][column] {
                     if self.flying_stone.x + column < self.field.first().unwrap().len() - 1 {
                         if self.flying_stone.y + row + 1 >= self.field.len() ||
                             self.field[self.flying_stone.y + row + 1][self.flying_stone.x + column] {
