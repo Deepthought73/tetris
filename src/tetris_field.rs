@@ -1,28 +1,32 @@
-use std::sync::{Arc, Mutex};
-use std::thread;
 use rand::Rng;
 use termion::color;
 use termion::color::Rgb;
-use crate::{Drawing, tetris_field};
+use crate::Drawing;
 use crate::stone::Stone;
 
 pub struct TetrisField {
     field: Vec<Vec<bool>>,
+    color_matrix: Vec<Vec<Option<Rgb>>>,
     flying_stone: Stone,
 }
 
 impl TetrisField {
     pub fn new(width: usize, height: usize) -> TetrisField {
         let mut field = vec![];
+        let mut color_matrix = vec![];
         for _ in 0..height {
             let mut row = vec![];
+            let mut color_row = vec![];
             for _ in 0..width {
-                row.push(false)
+                row.push(false);
+                color_row.push(None);
             }
-            field.push(row)
+            field.push(row);
+            color_matrix.push(color_row);
         }
         TetrisField {
             field,
+            color_matrix,
             flying_stone: Stone::t(0, 0, color::Rgb(200, 100, 0)),
         }
     }
