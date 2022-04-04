@@ -117,10 +117,28 @@ impl TetrisField {
         false
     }
 
+    fn has_collision(&self) -> bool {
+        for row in 0..4 {
+            for column in 0..4 {
+                if self.flying_stone.block_mask()[row][column] {
+                    if self.field[self.flying_stone.y + row][self.flying_stone.x + column] {
+                        return true;
+                    }
+                }
+            }
+        }
+        false
+    }
+
     pub fn rotate(&mut self, drawing: &mut Drawing) {
         if !self.is_on_ground() {
             self.remove_stone(drawing);
             self.flying_stone.rotate();
+            if self.has_collision() {
+                self.flying_stone.rotate();
+                self.flying_stone.rotate();
+                self.flying_stone.rotate();
+            }
             self.render_stone(drawing);
         }
     }
