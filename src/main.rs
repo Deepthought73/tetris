@@ -36,11 +36,12 @@ fn main() {
             match evt {
                 Event::Key(Char('q')) => {
                     *is_running.lock().unwrap() = false;
-                    break
-                },
-                Event::Key(Char('a')) | Event::Key(Char('A')) | Event::Key(Key::Left) => {
-
+                    break;
                 }
+                Event::Key(Char('a')) | Event::Key(Char('A')) | Event::Key(Key::Left) => {}
+                Event::Key(Char('d')) | Event::Key(Char('D')) | Event::Key(Key::Right) => {}
+                Event::Key(Char('w')) | Event::Key(Char('W')) | Event::Key(Key::Up) => {}
+                Event::Key(Char('s')) | Event::Key(Char('S')) | Event::Key(Key::Down) => {}
                 _ => {}
             }
         }
