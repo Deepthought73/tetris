@@ -87,9 +87,11 @@ impl TetrisField {
         for row in 0..4 {
             for column in 0..4 {
                 if self.flying_stone.block_mask[row][column] {
-                    if self.flying_stone.y + row + 1 >= self.field.len() ||
-                        self.field[self.flying_stone.y + row + 1][self.flying_stone.x + column] {
-                        return true;
+                    if self.flying_stone.x+column < self.field.first().unwrap().len() - 1 {
+                        if self.flying_stone.y + row + 1 >= self.field.len() ||
+                            self.field[self.flying_stone.y + row + 1][self.flying_stone.x + column] {
+                            return true;
+                        }
                     }
                 }
             }
