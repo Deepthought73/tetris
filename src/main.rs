@@ -55,7 +55,7 @@ fn main() {
                     );
                 }
                 Event::Key(Char('w')) | Event::Key(Char('W')) | Event::Key(Key::Up)=> {
-                    field.lock().unwrap().rotate();
+                    field.lock().unwrap().rotate(drawing.lock().unwrap().borrow_mut());
                 }
                 _ => {}
             }
