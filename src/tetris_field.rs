@@ -4,8 +4,7 @@ use crate::stone::Stone;
 
 pub struct TetrisField {
     field: Vec<Vec<bool>>,
-    flying_stone: Stone,
-    is_rendering: bool
+    flying_stone: Stone
 }
 
 impl TetrisField {
@@ -20,8 +19,7 @@ impl TetrisField {
         }
         TetrisField {
             field,
-            flying_stone: Stone::t(0, 0, color::Rgb(200, 100, 0)),
-            is_rendering: false
+            flying_stone: Stone::t(0, 0, color::Rgb(200, 100, 0))
         }
     }
 
@@ -54,11 +52,9 @@ impl TetrisField {
 
     pub fn move_stone(&mut self, drawing: &mut Drawing) {
         if !self.is_on_ground() {
-            self.is_rendering = true;
             self.remove_stone(drawing);
             self.flying_stone.y += 1;
             self.render_stone(drawing);
-            self.is_rendering = false;
         } else {
             for row in 0..4 {
                 for column in 0..4 {
@@ -119,9 +115,10 @@ impl TetrisField {
         false
     }
 
-    pub fn rotate(&mut self) {
-        while self.is_rendering {}
-        self.flying_stone.rotate()
+    pub fn rotate(&mut self, drawing: &mut Drawing) {
+        self.remove_stone(drawing);
+        self.flying_stone.rotate();
+        self.render_stone(drawing);
     }
 
     fn is_on_ground(&self) -> bool {
