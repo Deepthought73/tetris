@@ -2,6 +2,7 @@ use std::borrow::Borrow;
 use std::io::{stdout, Stdout, Write};
 use termion::{clear, color, cursor};
 use termion::raw::{IntoRawMode, RawTerminal};
+use crate::stone::Stone;
 
 pub struct Drawing {
     out: RawTerminal<Stdout>,

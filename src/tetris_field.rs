@@ -28,7 +28,7 @@ impl TetrisField {
         TetrisField {
             field,
             color_matrix,
-            flying_stone: Stone::t(0, 0, color::Rgb(200, 100, 0)),
+            flying_stone: TetrisField::generate_next_stone(0, 0),
         }
     }
 
@@ -79,7 +79,7 @@ impl TetrisField {
     }
 
     pub fn move_stone(&mut self, drawing: &mut Drawing) {
-        if !self.is_on_ground() {
+        if !self.is_on_ground(&self.flying_stone) {
             self.remove_stone(drawing);
             self.flying_stone.y += 1;
             self.render_stone(drawing);
@@ -98,6 +98,19 @@ impl TetrisField {
             }
             self.flying_stone = TetrisField::generate_next_stone(0, 0);
         }
+    }
+
+    pub fn jump_one_step(&mut self, drawing: &mut Drawing) {
+        self.move_stone(drawing);
+        self.move_stone(drawing);
+    }
+
+    pub fn jump_to_ground(&mut self, drawing: &mut Drawing) {
+        self.remove_stone(drawing);
+        while !self.is_on_ground(&self.flying_stone) {
+            self.flying_stone.y += 1
+        }
+        self.render_stone(drawing);
     }
 
     fn generate_next_stone(x: usize, y: usize) -> Stone {
@@ -127,7 +140,7 @@ impl TetrisField {
     fn row_is_complete(&mut self, row: usize) -> bool {
         for column in 0..self.field[0].len() {
             if !self.field[row][column] {
-                return false
+                return false;
             }
         }
         true
@@ -223,7 +236,7 @@ impl TetrisField {
     }
 
     pub fn rotate(&mut self, drawing: &mut Drawing) {
-        if !self.is_on_ground() {
+        if !self.is_on_ground(&self.flying_stone) {
             self.remove_stone(drawing);
             self.flying_stone.rotate();
             if self.has_collision() {
@@ -235,14 +248,13 @@ impl TetrisField {
         }
     }
 
-    fn is_on_ground(&self) -> bool {
-        let block_mask = self.flying_stone.block_mask();
+    fn is_on_ground(&self, stone: &Stone) -> bool {
         for row in 0..4 {
             for column in 0..4 {
-                if block_mask[row][column] {
-                    if self.flying_stone.x + column < self.field.first().unwrap().len() - 1 {
-                        if self.flying_stone.y + row + 1 >= self.field.len() ||
-                            self.field[self.flying_stone.y + row + 1][self.flying_stone.x + column] {
+                if stone.block_mask()[row][column] {
+                    if stone.x + column < self.field.first().unwrap().len() - 1 {
+                        if stone.y + row + 1 >= self.field.len() ||
+                            self.field[stone.y + row + 1][stone.x + column] {
                             return true;
                         }
                     }
