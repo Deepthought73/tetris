@@ -64,8 +64,37 @@ impl TetrisField {
                         self.field[self.flying_stone.y + row][self.flying_stone.x + column] = true
                     }
                 }
+                if self.flying_stone.y + row < self.field.len() {
+                    if self.row_is_complete(self.flying_stone.y + row) {
+                        self.clear_row(self.flying_stone.y + row, drawing)
+                    }
+                }
             }
             self.flying_stone = Stone::t(0, 0, color::Rgb(100, 100, 0));
+        }
+    }
+
+    fn row_is_complete(&mut self, row: usize) -> bool {
+        for column in 0..self.field[0].len() {
+            if !self.field[row][column] {
+                return false
+            }
+        }
+        true
+    }
+
+    fn clear_row(&mut self, row: usize, drawing: &mut Drawing) {
+        for column in 0..self.field[0].len() {
+            drawing.clear_block_at(
+                column,
+                row,
+            );
+            self.field[row][column] = false
+        }
+        for index in (1..row).rev() {
+            for column in 0..self.field[index].len() {
+                self.field[index][column] = self.field[index - 1][column]
+            }
         }
     }
 
