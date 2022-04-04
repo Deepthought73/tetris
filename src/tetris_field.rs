@@ -1,7 +1,9 @@
 use std::sync::{Arc, Mutex};
 use std::thread;
+use rand::Rng;
 use termion::color;
-use crate::Drawing;
+use termion::color::Rgb;
+use crate::{Drawing, tetris_field};
 use crate::stone::Stone;
 
 pub struct TetrisField {
@@ -21,7 +23,7 @@ impl TetrisField {
         }
         TetrisField {
             field,
-            flying_stone: Stone::t(0, 0, color::Rgb(200, 100, 0))
+            flying_stone: Stone::t(0, 0, color::Rgb(200, 100, 0)),
         }
     }
 
@@ -65,7 +67,31 @@ impl TetrisField {
                     }
                 }
             }
-            self.flying_stone = Stone::t(0, 0, color::Rgb(100, 100, 0));
+            self.flying_stone = TetrisField::generate_next_stone(0, 0);
+        }
+    }
+
+    fn generate_next_stone(x: usize, y: usize) -> Stone {
+        let mut rng = rand::thread_rng();
+        let r = rng.gen_range(0..=1) * 255;
+        let g = rng.gen_range(0..=1) * 255;
+        let b =
+            if r == 255 && g == 255 {
+                0
+            } else if r == 0 && g == 0 {
+                255
+            } else {
+                rng.gen_range(0..=1) * 255
+            };
+        let color = Rgb(r, g, b);
+        match rng.gen_range(0..7) {
+            0 => Stone::i(x, y, color),
+            1 => Stone::j(x, y, color),
+            2 => Stone::l(x, y, color),
+            3 => Stone::o(x, y, color),
+            4 => Stone::s(x, y, color),
+            5 => Stone::t(x, y, color),
+            _ => Stone::z(x, y, color),
         }
     }
 
@@ -122,10 +148,10 @@ impl TetrisField {
             for column in 0..4 {
                 if self.flying_stone.block_mask()[row][column] {
                     if self.flying_stone.x + column > self.field.first().unwrap().len() - 1 {
-                        return true
+                        return true;
                     }
                     if self.flying_stone.y + row > self.field.len() - 1 {
-                        return true
+                        return true;
                     }
                     if self.field[self.flying_stone.y + row][self.flying_stone.x + column] {
                         return true;
