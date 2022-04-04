@@ -252,7 +252,7 @@ impl TetrisField {
         for row in 0..4 {
             for column in 0..4 {
                 if stone.block_mask()[row][column] {
-                    if stone.x + column < self.field.first().unwrap().len() - 1 {
+                    if stone.x + column < self.field.first().unwrap().len() {
                         if stone.y + row + 1 >= self.field.len() ||
                             self.field[stone.y + row + 1][stone.x + column] {
                             return true;
