@@ -67,6 +67,18 @@ impl TetrisField {
         }
     }
 
+    pub fn move_stone_right(&mut self, drawing: &mut Drawing) {
+        self.remove_stone(drawing);
+        self.flying_stone.x += 1;
+        self.render_stone(drawing)
+    }
+
+    pub fn move_stone_left(&mut self, drawing: &mut Drawing) {
+        self.remove_stone(drawing);
+        self.flying_stone.x -= 1;
+        self.render_stone(drawing)
+    }
+
     fn is_on_ground(&self) -> bool {
         for row in 0..4 {
             for column in 0..4 {
