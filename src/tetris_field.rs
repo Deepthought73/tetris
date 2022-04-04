@@ -118,9 +118,11 @@ impl TetrisField {
     }
 
     pub fn rotate(&mut self, drawing: &mut Drawing) {
-        self.remove_stone(drawing);
-        self.flying_stone.rotate();
-        self.render_stone(drawing);
+        if !self.is_on_ground() {
+            self.remove_stone(drawing);
+            self.flying_stone.rotate();
+            self.render_stone(drawing);
+        }
     }
 
     fn is_on_ground(&self) -> bool {
