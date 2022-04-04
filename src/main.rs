@@ -4,6 +4,7 @@ use std::thread;
 use std::time::Duration;
 use crate::tetris_field::TetrisField;
 use termion::event::{Key, Event};
+use termion::event::Key::Char;
 use termion::input::TermRead;
 use crate::drawing::Drawing;
 
@@ -33,10 +34,13 @@ fn main() {
         for c in stdin.events() {
             let evt = c.unwrap();
             match evt {
-                Event::Key(Key::Char('q')) => {
+                Event::Key(Char('q')) => {
                     *is_running.lock().unwrap() = false;
                     break
                 },
+                Event::Key(Char('a')) | Event::Key(Char('A')) | Event::Key(Key::Left) => {
+
+                }
                 _ => {}
             }
         }
