@@ -67,7 +67,7 @@ impl Drawing {
         write!(
             self.out, "{}Tetris",
             termion::cursor::Goto((self.root_x + self.field_width / 2 - 2) as u16, self.root_y as u16)
-        );
+        ).unwrap();
 
         for y in 0..self.field_height {
             for x in 0..(self.field_width / 2) {
@@ -131,7 +131,7 @@ impl Drawing {
                     color::Fg(Rgb(255, 50, 50)),
                     cursor::Goto(root_x + i as u16 + 2, root_y + j as u16 + 1),
                     chr
-                );
+                ).unwrap();
             }
         }
     }

@@ -34,7 +34,7 @@ impl TetrisField {
             flying_stone,
             preview,
             score: 0,
-            is_game_over: true,
+            is_game_over: false,
         }
     }
 
