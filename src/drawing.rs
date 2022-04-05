@@ -62,6 +62,17 @@ impl Drawing {
         self.draw_char_at(self.root_x + self.field_width, self.root_y - 1, "┓", Box::from(color::Reset));
         self.draw_char_at(self.root_x - 1, self.root_y + self.field_height, "┗", Box::from(color::Reset));
         self.draw_char_at(self.root_x + self.field_width, self.root_y + self.field_height, "┛", Box::from(color::Reset));
+
+        write!(
+            self.out, "{}Tetris",
+            termion::cursor::Goto((self.root_x + self.field_width / 2 - 2) as u16, self.root_y as u16)
+        );
+
+        for y in 0..self.field_height {
+            for x in 0..(self.field_width / 2) {
+                self.clear_block_at(x, y);
+            }
+        }
     }
 
     pub fn hide_cursor(&mut self) {
@@ -90,7 +101,7 @@ impl Drawing {
         self.draw_char_at(
             self.root_x + x * 2,
             self.root_y + y,
-            "  ",
+            " .",
             Box::from(color::Reset),
         )
     }

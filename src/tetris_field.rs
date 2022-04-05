@@ -227,7 +227,7 @@ impl TetrisField {
             self.remove_stone(drawing);
             self.flying_stone.x += 1;
             self.render_stone(drawing);
-            self.update_preview(drawing);
+            //self.update_preview(drawing);
         }
     }
 
@@ -236,7 +236,7 @@ impl TetrisField {
             self.remove_stone(drawing);
             self.flying_stone.x -= 1;
             self.render_stone(drawing);
-            self.update_preview(drawing);
+            //self.update_preview(drawing);
         }
     }
 
@@ -296,9 +296,19 @@ impl TetrisField {
             self.remove_stone(drawing);
             self.flying_stone.rotate();
             if self.has_collision() {
-                self.flying_stone.rotate();
-                self.flying_stone.rotate();
-                self.flying_stone.rotate();
+                if self.flying_stone.x > 4 {
+                    self.flying_stone.x -= 1;
+                } else if self.flying_stone.x < 4 {
+                    self.flying_stone.x += 1;
+                }
+                if self.has_collision() {
+                    if self.flying_stone.x > 4 {
+                        self.flying_stone.x += 1;
+                    } else if self.flying_stone.x < 4 {
+                        self.flying_stone.x -= 1;
+                    }
+                    self.flying_stone.derotate()
+                }
             }
             self.render_stone(drawing);
         }

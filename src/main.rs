@@ -13,7 +13,7 @@ pub mod tetris_field;
 pub mod stone;
 pub mod drawing;
 
-const TICK_DURATION: Duration = Duration::new(0, 300_000_000);
+const TICK_DURATION: Duration = Duration::new(0, 500_000_000);
 
 fn main() {
     let width = 10;
