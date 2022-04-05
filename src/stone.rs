@@ -259,6 +259,10 @@ impl Stone {
         self.rotation = (self.rotation + 1) % 4;
     }
 
+    pub fn derotate(&mut self) {
+        self.rotation = (self.rotation + 3) % 4;
+    }
+
     pub fn block_mask(&self) -> &[[bool; 4]; 4] {
         &self.block_mask[self.rotation]
     }

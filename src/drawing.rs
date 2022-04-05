@@ -2,7 +2,6 @@ use std::borrow::Borrow;
 use std::io::{stdout, Stdout, Write};
 use termion::{clear, color, cursor};
 use termion::raw::{IntoRawMode, RawTerminal};
-use crate::stone::Stone;
 
 pub struct Drawing {
     out: RawTerminal<Stdout>,
@@ -22,6 +21,10 @@ impl Drawing {
             field_width: field_width * 2,
             field_height,
         }
+    }
+
+    pub fn draw_score(&mut self, score: usize) {
+        write!(self.out, "{}Score: {}", cursor::Goto((self.root_x + self.field_width + 3) as u16, (self.root_y + 1) as u16), score).unwrap();
     }
 
     pub fn draw_border(&mut self) {
@@ -59,6 +62,17 @@ impl Drawing {
         self.draw_char_at(self.root_x + self.field_width, self.root_y - 1, "┓", Box::from(color::Reset));
         self.draw_char_at(self.root_x - 1, self.root_y + self.field_height, "┗", Box::from(color::Reset));
         self.draw_char_at(self.root_x + self.field_width, self.root_y + self.field_height, "┛", Box::from(color::Reset));
+
+        write!(
+            self.out, "{}Tetris",
+            termion::cursor::Goto((self.root_x + self.field_width / 2 - 2) as u16, self.root_y as u16)
+        );
+
+        for y in 0..self.field_height {
+            for x in 0..(self.field_width / 2) {
+                self.clear_block_at(x, y);
+            }
+        }
     }
 
     pub fn hide_cursor(&mut self) {
@@ -87,7 +101,7 @@ impl Drawing {
         self.draw_char_at(
             self.root_x + x * 2,
             self.root_y + y,
-            "  ",
+            " .",
             Box::from(color::Reset),
         )
     }

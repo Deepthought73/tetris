@@ -13,7 +13,7 @@ pub mod tetris_field;
 pub mod stone;
 pub mod drawing;
 
-const TICK_DURATION: Duration = Duration::new(0, 200_000_000);
+const TICK_DURATION: Duration = Duration::new(0, 500_000_000);
 
 fn main() {
     let width = 10;
@@ -28,6 +28,7 @@ fn main() {
     drawing.lock().unwrap().hide_cursor();
     drawing.lock().unwrap().clear_screen();
     drawing.lock().unwrap().draw_border();
+    drawing.lock().unwrap().draw_score(0);
 
     let is_running = Arc::new(Mutex::new(true));
     let is_running_main = Arc::clone(&is_running);
@@ -77,4 +78,12 @@ fn main() {
 
     drawing_copy.lock().unwrap().clear_screen();
     drawing_copy.lock().unwrap().show_cursor();
+
+    println!(
+        "{}Score was: {}{}",
+        termion::color::Fg(termion::color::Reset),
+        field_copy.lock().unwrap().score(),
+        termion::cursor::Goto(0, 1)
+    );
+    println!();
 }
