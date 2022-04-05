@@ -2,7 +2,6 @@ use std::borrow::Borrow;
 use std::io::{stdout, Stdout, Write};
 use termion::{clear, color, cursor};
 use termion::raw::{IntoRawMode, RawTerminal};
-use crate::stone::Stone;
 
 pub struct Drawing {
     out: RawTerminal<Stdout>,
@@ -22,6 +21,10 @@ impl Drawing {
             field_width: field_width * 2,
             field_height,
         }
+    }
+
+    pub fn draw_score(&mut self, score: usize) {
+        write!(self.out, "{}Score: {}", cursor::Goto((self.root_x + self.field_width + 3) as u16, (self.root_y + 1) as u16), score).unwrap();
     }
 
     pub fn draw_border(&mut self) {

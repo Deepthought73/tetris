@@ -1,15 +1,14 @@
 use rand::Rng;
-use termion::color;
 use termion::color::Rgb;
-use termion::event::Key::Null;
 use crate::Drawing;
 use crate::stone::Stone;
 
 pub struct TetrisField {
     field: Vec<Vec<bool>>,
     color_matrix: Vec<Vec<Option<Rgb>>>,
-    pub(crate) flying_stone: Stone,
+    pub flying_stone: Stone,
     preview: Stone,
+    score: usize,
 }
 
 impl TetrisField {
@@ -26,26 +25,27 @@ impl TetrisField {
             field.push(row);
             color_matrix.push(color_row);
         }
-        let flying_stone = TetrisField::generate_next_stone(0, 0);
+        let flying_stone = TetrisField::generate_next_stone();
         let preview = flying_stone.clone();
         TetrisField {
             field,
             color_matrix,
             flying_stone,
             preview,
+            score: 0,
         }
     }
 
-    pub fn draw_block_at(&mut self, drawing: &mut Drawing, x:usize, y:usize, color: Rgb) {
+    pub fn draw_block_at(&mut self, drawing: &mut Drawing, x: usize, y: usize, color: Rgb) {
         drawing.draw_block_at(
             x,
             y,
-            *Box::from(color)
+            *Box::from(color),
         );
         self.color_matrix[y][x] = Some(color);
     }
 
-    pub fn clear_block_at(&mut self, drawing: &mut Drawing, x:usize, y:usize) {
+    pub fn clear_block_at(&mut self, drawing: &mut Drawing, x: usize, y: usize) {
         drawing.clear_block_at(
             x,
             y,
@@ -61,7 +61,7 @@ impl TetrisField {
                         drawing,
                         self.flying_stone.x + column,
                         self.flying_stone.y + row,
-                        *Box::from(self.flying_stone.color.clone())
+                        *Box::from(self.flying_stone.color.clone()),
                     );
                 }
             }
@@ -117,6 +117,7 @@ impl TetrisField {
             self.flying_stone.y += 1;
             self.render_stone(drawing);
         } else {
+            let mut cleared = 0;
             for row in 0..4 {
                 for column in 0..4 {
                     if self.flying_stone.block_mask()[row][column] {
@@ -125,11 +126,21 @@ impl TetrisField {
                 }
                 if self.flying_stone.y + row < self.field.len() {
                     if self.row_is_complete(self.flying_stone.y + row) {
+                        cleared += 1;
                         self.clear_row(self.flying_stone.y + row, drawing)
                     }
                 }
             }
-            self.flying_stone = TetrisField::generate_next_stone(0, 0);
+            if cleared > 0 {
+                self.score += match cleared {
+                    1 => 100,
+                    2 => 400,
+                    3 => 800,
+                    _ => 1600
+                };
+                drawing.draw_score(self.score);
+            }
+            self.flying_stone = TetrisField::generate_next_stone();
         }
     }
 
@@ -146,7 +157,7 @@ impl TetrisField {
         self.render_stone(drawing);
     }
 
-    fn generate_next_stone(x: usize, y: usize) -> Stone {
+    fn generate_next_stone() -> Stone {
         let mut rng = rand::thread_rng();
         let r = rng.gen_range(0..=1) * 255;
         let g = rng.gen_range(0..=1) * 255;
@@ -160,13 +171,13 @@ impl TetrisField {
             };
         let color = Rgb(r, g, b);
         match rng.gen_range(0..7) {
-            0 => Stone::i(x, y, color),
-            1 => Stone::j(x, y, color),
-            2 => Stone::l(x, y, color),
-            3 => Stone::o(x, y, color),
-            4 => Stone::s(x, y, color),
-            5 => Stone::t(x, y, color),
-            _ => Stone::z(x, y, color),
+            0 => Stone::i(4, 0, color),
+            1 => Stone::j(4, 0, color),
+            2 => Stone::l(4, 0, color),
+            3 => Stone::o(4, 0, color),
+            4 => Stone::s(4, 0, color),
+            5 => Stone::t(4, 0, color),
+            _ => Stone::z(4, 0, color),
         }
     }
 
@@ -187,7 +198,7 @@ impl TetrisField {
                 row,
             );
         }
-        for index in (1..row+1).rev() {
+        for index in (1..row + 1).rev() {
             for column in 0..self.field[0].len() {
                 if self.field[index - 1][column] {
                     if let Some(color) = self.color_matrix[index - 1][column] {
@@ -307,5 +318,9 @@ impl TetrisField {
             }
         }
         false
+    }
+
+    pub fn score(&self) -> usize {
+        self.score
     }
 }
