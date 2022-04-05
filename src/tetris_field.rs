@@ -99,15 +99,16 @@ impl TetrisField {
 
     fn remove_preview(&mut self, drawing: &mut Drawing) {
         for row in 0..4 {
-            for column in 0..4 {
-                if self.flying_stone.block_mask()[row][column] {
-                    self.clear_block_at(
-                        drawing,
-                        self.preview.x + column,
-                        self.preview.y + row,
-                    )
-                }
-            }
+             for column in 0..4 {
+                 //self.draw_block_at(drawing, self.preview.x, self.preview.y, Rgb(100,100,100));
+                 if self.flying_stone.block_mask()[row][column] {
+                     self.clear_block_at(
+                         drawing,
+                         self.preview.x + column,
+                         self.preview.y + row,
+                     )
+                 }
+             }
         }
     }
 
@@ -116,6 +117,7 @@ impl TetrisField {
             self.remove_stone(drawing);
             self.flying_stone.y += 1;
             self.render_stone(drawing);
+            self.update_preview(drawing);
         } else {
             for row in 0..4 {
                 for column in 0..4 {
@@ -130,6 +132,7 @@ impl TetrisField {
                 }
             }
             self.flying_stone = TetrisField::generate_next_stone(0, 0);
+            self.preview = self.flying_stone.clone();
         }
     }
 
