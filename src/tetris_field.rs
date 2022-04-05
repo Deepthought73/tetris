@@ -136,6 +136,9 @@ impl TetrisField {
                 }
             }
             self.flying_stone = TetrisField::generate_next_stone();
+            if !self.is_game_over {
+                self.render_stone(drawing);
+            }
             if self.has_collision() {
                 self.is_game_over = true;
             }
