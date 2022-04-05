@@ -216,7 +216,9 @@ impl TetrisField {
     }
 
     pub fn update_preview(&mut self, drawing: &mut Drawing) {
-        self.remove_preview(drawing);
+        if !self.has_preview_collision() {
+            self.remove_preview(drawing);
+        }
         self.preview.x = self.flying_stone.x;
         self.preview.y = self.flying_stone.y;
         while !self.is_on_ground(&self.preview) {
@@ -273,6 +275,13 @@ impl TetrisField {
             }
         }
         false
+    }
+
+    fn has_preview_collision(&self) -> bool {
+        if (self.flying_stone.y + self.preview.y) > 4 {
+            return false;
+        }
+        true
     }
 
     fn has_collision(&self) -> bool {
