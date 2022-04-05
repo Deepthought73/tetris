@@ -81,7 +81,6 @@ fn main() {
         thread::sleep(TICK_DURATION);
     }
 
-
     drawing_copy.lock().unwrap().clear_screen();
     drawing_copy.lock().unwrap().show_cursor();
 

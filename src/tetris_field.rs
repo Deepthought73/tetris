@@ -9,7 +9,7 @@ pub struct TetrisField {
     pub flying_stone: Stone,
     preview: Stone,
     score: usize,
-    is_game_over: bool
+    is_game_over: bool,
 }
 
 impl TetrisField {
@@ -34,7 +34,7 @@ impl TetrisField {
             flying_stone,
             preview,
             score: 0,
-            is_game_over: false
+            is_game_over: true,
         }
     }
 
@@ -78,7 +78,7 @@ impl TetrisField {
                         drawing,
                         self.preview.x + column,
                         self.preview.y + row,
-                        *Box::from(self.flying_stone.color.clone())
+                        *Box::from(self.flying_stone.color.clone()),
                     );
                 }
             }
@@ -101,16 +101,16 @@ impl TetrisField {
 
     fn remove_preview(&mut self, drawing: &mut Drawing) {
         for row in 0..4 {
-             for column in 0..4 {
-                 //self.draw_block_at(drawing, self.preview.x, self.preview.y, Rgb(100,100,100));
-                 if self.flying_stone.block_mask()[row][column] {
-                     self.clear_block_at(
-                         drawing,
-                         self.preview.x + column,
-                         self.preview.y + row,
-                     )
-                 }
-             }
+            for column in 0..4 {
+                //self.draw_block_at(drawing, self.preview.x, self.preview.y, Rgb(100,100,100));
+                if self.flying_stone.block_mask()[row][column] {
+                    self.clear_block_at(
+                        drawing,
+                        self.preview.x + column,
+                        self.preview.y + row,
+                    )
+                }
+            }
         }
     }
 
