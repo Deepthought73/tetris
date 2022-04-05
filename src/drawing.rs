@@ -1,6 +1,7 @@
 use std::borrow::Borrow;
 use std::io::{stdout, Stdout, Write};
 use termion::{clear, color, cursor};
+use termion::color::Rgb;
 use termion::raw::{IntoRawMode, RawTerminal};
 
 pub struct Drawing {
@@ -104,6 +105,33 @@ impl Drawing {
             " .",
             Box::from(color::Reset),
         )
+    }
+
+    pub fn draw_game_over(&mut self) {
+        let game_over_string = vec![
+            r"                                                       ",
+            r"  ___    __    __  __  ____    _____  _  _  ____  ____ ",
+            r" / __)  /__\  (  \/  )( ___)  (  _  )( \/ )( ___)(  _ \",
+            r"( (_-. /(__)\  )    (  )__)    )(_)(  \  /  )__)  )   /",
+            r" \___/(__)(__)(_/\/\_)(____)  (_____)  \/  (____)(_)\_)",
+            r"                                                       ",
+        ];
+
+        let size = termion::terminal_size().unwrap();
+        let root_x = (size.0 - game_over_string.first().unwrap().len() as u16) / 2;
+        let root_y = (size.1 - game_over_string.len() as u16) / 2;
+
+        for (j, row) in game_over_string.iter().enumerate() {
+            for (i, chr) in row.chars().enumerate() {
+                write!(
+                    self.out,
+                    "{}{}{}",
+                    color::Fg(Rgb(255, 50, 50)),
+                    cursor::Goto(root_x + i as u16, root_y + j as u16),
+                    chr
+                );
+            }
+        }
     }
 
     fn draw_char_at(&mut self, x: usize, y: usize, seq: &str, block_color: Box<dyn color::Color>) {

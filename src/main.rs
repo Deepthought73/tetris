@@ -72,9 +72,15 @@ fn main() {
     field_copy.lock().unwrap().render_stone(drawing_copy.lock().unwrap().borrow_mut());
     thread::sleep(TICK_DURATION);
     while *is_running_main.lock().unwrap() {
-        field_copy.lock().unwrap().move_stone(drawing_copy.lock().unwrap().borrow_mut());
+        if field_copy.lock().unwrap().game_over() {
+            drawing_copy.lock().unwrap().draw_game_over();
+        } else {
+            field_copy.lock().unwrap().move_stone(drawing_copy.lock().unwrap().borrow_mut());
+        }
+
         thread::sleep(TICK_DURATION);
     }
+
 
     drawing_copy.lock().unwrap().clear_screen();
     drawing_copy.lock().unwrap().show_cursor();

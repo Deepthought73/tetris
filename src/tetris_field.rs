@@ -357,4 +357,8 @@ impl TetrisField {
     pub fn score(&self) -> usize {
         self.score
     }
+
+    pub fn game_over(&self) -> bool {
+        self.is_game_over
+    }
 }
