@@ -296,6 +296,8 @@ impl TetrisField {
 
     pub fn rotate(&mut self, drawing: &mut Drawing) {
         if !self.is_on_ground(&self.flying_stone) {
+            self.remove_preview(drawing);
+
             self.remove_stone(drawing);
             self.flying_stone.rotate();
             if self.has_collision() {
@@ -310,10 +312,14 @@ impl TetrisField {
                     } else if self.flying_stone.x < 4 {
                         self.flying_stone.x -= 1;
                     }
-                    self.flying_stone.derotate()
+                    self.flying_stone.derotate();
+                    self.preview.derotate();
                 }
             }
             self.render_stone(drawing);
+
+            self.preview = self.flying_stone.clone();
+            self.update_preview(drawing);
         }
     }
 
