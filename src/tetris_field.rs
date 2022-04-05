@@ -9,6 +9,7 @@ pub struct TetrisField {
     pub flying_stone: Stone,
     preview: Stone,
     score: usize,
+    is_game_over: bool
 }
 
 impl TetrisField {
@@ -33,6 +34,7 @@ impl TetrisField {
             flying_stone,
             preview,
             score: 0,
+            is_game_over: false
         }
     }
 
@@ -134,6 +136,9 @@ impl TetrisField {
                 }
             }
             self.flying_stone = TetrisField::generate_next_stone();
+            if self.has_collision() {
+                self.is_game_over = true;
+            }
             self.preview = self.flying_stone.clone();
             if cleared > 0 {
                 self.score += match cleared {
