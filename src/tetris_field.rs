@@ -8,7 +8,8 @@ use crate::stone::Stone;
 pub struct TetrisField {
     field: Vec<Vec<bool>>,
     color_matrix: Vec<Vec<Option<Rgb>>>,
-    flying_stone: Stone,
+    pub(crate) flying_stone: Stone,
+    preview: Stone,
 }
 
 impl TetrisField {
@@ -25,10 +26,13 @@ impl TetrisField {
             field.push(row);
             color_matrix.push(color_row);
         }
+        let flying_stone = TetrisField::generate_next_stone(0, 0);
+        let preview = flying_stone.clone();
         TetrisField {
             field,
             color_matrix,
-            flying_stone: TetrisField::generate_next_stone(0, 0),
+            flying_stone,
+            preview,
         }
     }
 
@@ -64,6 +68,21 @@ impl TetrisField {
         }
     }
 
+    pub fn render_preview(&mut self, drawing: &mut Drawing) {
+        for row in 0..4 {
+            for column in 0..4 {
+                if self.flying_stone.block_mask()[row][column] {
+                    self.draw_block_at(
+                        drawing,
+                        self.preview.x + column,
+                        self.preview.y + row,
+                        *Box::from(self.flying_stone.color.clone())
+                    );
+                }
+            }
+        }
+    }
+
     fn remove_stone(&mut self, drawing: &mut Drawing) {
         for row in 0..4 {
             for column in 0..4 {
@@ -72,6 +91,20 @@ impl TetrisField {
                         drawing,
                         self.flying_stone.x + column,
                         self.flying_stone.y + row,
+                    )
+                }
+            }
+        }
+    }
+
+    fn remove_preview(&mut self, drawing: &mut Drawing) {
+        for row in 0..4 {
+            for column in 0..4 {
+                if self.flying_stone.block_mask()[row][column] {
+                    self.clear_block_at(
+                        drawing,
+                        self.preview.x + column,
+                        self.preview.y + row,
                     )
                 }
             }
@@ -168,20 +201,32 @@ impl TetrisField {
         }
     }
 
-    pub fn move_stone_right(&mut self, drawing: &mut Drawing) {
-        self.remove_stone(drawing);
-        if !self.collision_right() {
-            self.flying_stone.x += 1;
+    pub fn update_preview(&mut self, drawing: &mut Drawing) {
+        self.remove_preview(drawing);
+        self.preview.x = self.flying_stone.x;
+        self.preview.y = self.flying_stone.y;
+        while !self.is_on_ground(&self.preview) {
+            self.preview.y += 1;
         }
-        self.render_stone(drawing)
+        self.render_preview(drawing);
+    }
+
+    pub fn move_stone_right(&mut self, drawing: &mut Drawing) {
+        if !self.collision_right() {
+            self.remove_stone(drawing);
+            self.flying_stone.x += 1;
+            self.render_stone(drawing);
+            self.update_preview(drawing);
+        }
     }
 
     pub fn move_stone_left(&mut self, drawing: &mut Drawing) {
-        self.remove_stone(drawing);
         if !self.collision_left() {
+            self.remove_stone(drawing);
             self.flying_stone.x -= 1;
+            self.render_stone(drawing);
+            self.update_preview(drawing);
         }
-        self.render_stone(drawing)
     }
 
     fn collision_right(&self) -> bool {
