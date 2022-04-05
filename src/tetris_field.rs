@@ -133,7 +133,7 @@ impl TetrisField {
                     }
                 }
             }
-            self.flying_stone = TetrisField::generate_next_stone(0, 0);
+            self.flying_stone = TetrisField::generate_next_stone();
             self.preview = self.flying_stone.clone();
             if cleared > 0 {
                 self.score += match cleared {
@@ -144,7 +144,6 @@ impl TetrisField {
                 };
                 drawing.draw_score(self.score);
             }
-            self.flying_stone = TetrisField::generate_next_stone();
         }
     }
 
